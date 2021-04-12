@@ -1,0 +1,58 @@
+
+
+rm(list=ls())
+
+library(readr)
+library(dplyr)
+library(stringr)
+library(RNOmni)
+
+set.seed(1)
+
+seqid <- readLines('/dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/seqid_autosomal.txt')
+
+dir.create(paste0('/dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/White/pQTL/White_matchNblack/all_sample_peers/Random_10times/'))
+dir.create(paste0('/dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/White/pQTL/White_matchNblack/all_sample_peers/Random_10times/invrankpheno'))
+
+for (r in 1:10){
+  dir.create(paste0('/dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/White/pQTL/White_matchNblack/all_sample_peers/Random_10times/invrankpheno/',r))
+
+White_matchNblack <- sort(sample(1:7213, 1871))
+writeLines(as.character(White_matchNblack), paste0("/dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/White/pQTL/White_matchNblack/White_matchNblack_",r,".txt"))
+tmp <- read.table(paste0("/dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/White/pQTL/White_matchNblack/peernum/invrankpheno/120/SeqId_10000_28.pheno"), stringsAsFactors = F)
+random_sample <- tmp$V2[White_matchNblack]
+writeLines(random_sample, paste0("/dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/White/pQTL/White_matchNblack/White_matchNblack_ID_",r,".txt"))
+
+covariates <- read_tsv(paste0('/dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/White/pQTL/peernum/covariates/covariates.120.cov'))
+covariates <- covariates[covariates$IID %in% random_sample, ]
+
+#for(i in 1:length(seqid)){
+#  gene <- seqid[i]
+  gene <- "SeqId_6919_3"
+
+  tmp <- read_tsv(paste0('/dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/White/pheno/', gene, '.pheno') )
+
+  dat <- inner_join(tmp,covariates)
+  tmp <- dat[,1:2]; dat <- dat[,-1:-2]; colnames(dat)[1] <- "y"
+
+  fit <- lm(y~., dat)
+  dat <- data.frame(tmp, y=RankNorm(residuals(fit))); colnames(dat)[3] <- gene
+  write_tsv(dat, col_names=F, paste0('/dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/White/pQTL/White_matchNblack/all_sample_peers/Random_10times/invrankpheno/',r,'/', gene, '.pheno'))
+
+  print(r)
+
+}
+
+for r in {1..10}
+do
+mkdir /dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/White/pQTL/White_matchNblack/all_sample_peers/Random_10times/summary_data/${r}
+/dcl01/chatterj/data/jzhang2/TOOLS/plink/plink2 \
+--threads 1 \
+--bfile /dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/White/window2M_pre/byseq/SeqId_6919_3 \
+--pheno /dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/White/pQTL/White_matchNblack/all_sample_peers/Random_10times/invrankpheno/${r}/SeqId_6919_3.pheno \
+--glm allow-no-covars \
+--out /dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/White/pQTL/White_matchNblack/all_sample_peers/Random_10times/summary_data/${r}/SeqId_6919_3.pheno
+done
+
+
+
