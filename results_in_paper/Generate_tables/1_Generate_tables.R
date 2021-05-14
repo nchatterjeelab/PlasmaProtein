@@ -40,6 +40,33 @@ tab1 <- tab1[,c("SOMAmer", "target","targetfullname","uniprot_id","entrezgenesym
 write_tsv(tab1,"/dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/White/pQTL/Tables/1_pQTL_summary_cleaned.txt")
 
 
+tab1 <- read_tsv("/dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/White/pQTL/Tables/1_pQTL_summary_cleaned.txt")
+
+ALT <- character()
+AF <- numeric()
+i=0
+for (chr in 1:22){
+  info <- read_tsv(paste0("/dcs01/arking/ARIC_static/ARIC_Data/GWAS/HRC/Aric_HRC_imputation/bedfiles/TOPMed/Filtered/Matched/vcf/White/info/chr",chr,".info.txt"), col_types = cols())
+  maf <- read_tsv(paste0("/dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/White/pQTL/MAF/chr",chr,".afreq"), col_types = cols())
+  m <- which(tab1$Chr == chr)
+  for (j in 1:length(m)){
+    i <- i+1; print(i)
+
+    ALT[i] <- info$ALT[info$ID == tab1$TopSNP[m[j]]]
+    tmp <- maf[maf$ID == tab1$TopSNP[m[j]],]
+    if(tmp$ALT == ALT[i]){
+      AF[i] <- tmp$ALT_FREQS
+    }else{
+      AF[i] <- 1-tmp$ALT_FREQS
+    }
+  }
+}
+
+tab1$A1 <- ALT
+tab1$A1_AF <- AF
+write_tsv(tab1,"/dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/White/pQTL/Tables/1_pQTL_summary_cleaned_1.0.txt")
+
+
 ## Black
 
 rm(list=ls())
@@ -75,6 +102,34 @@ tab1 <- tab1[,c("SOMAmer", "target","targetfullname","uniprot_id","entrezgenesym
 
 write_tsv(tab1,"/dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/Black/pQTL/Tables/1_pQTL_summary_cleaned.txt")
 
+# /dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/White/PWAS/SNPconvert/ARIC_GRCh38_ID.txt??
+
+
+tab1 <- read_tsv("/dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/Black/pQTL/Tables/1_pQTL_summary_cleaned.txt")
+
+ALT <- character()
+AF <- numeric()
+i=0
+for (chr in 1:22){
+  info <- read_tsv(paste0("/dcs01/arking/ARIC_static/ARIC_Data/GWAS/HRC/Aric_HRC_imputation/bedfiles/TOPMed/Filtered/Matched/vcf/Black/info/chr",chr,".info.txt"), col_types = cols())
+  maf <- read_tsv(paste0("/dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/Black/pQTL/MAF/chr",chr,".afreq"), col_types = cols())
+  m <- which(tab1$Chr == chr)
+  for (j in 1:length(m)){
+    i <- i+1; print(i)
+
+    ALT[i] <- info$ALT[info$ID == tab1$TopSNP[m[j]]]
+    tmp <- maf[maf$ID == tab1$TopSNP[m[j]],]
+    if(tmp$ALT == ALT[i]){
+      AF[i] <- tmp$ALT_FREQS
+    }else{
+      AF[i] <- 1-tmp$ALT_FREQS
+    }
+  }
+}
+
+tab1$A1 <- ALT
+tab1$A1_AF <- AF
+write_tsv(tab1,"/dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/Black/pQTL/Tables/1_pQTL_summary_cleaned_1.0.txt")
 
 
 ####################################
@@ -167,7 +222,6 @@ allpQTL <- read.table( paste0("/dcl01/chatterj/data/jzhang2/pwas/pipeline/Result
 #  print(i)
 #}
 #tab2 <- cbind(tab2, R2)
-
 #!!! see 2_tab2 folder
 tab2 <- read_tsv("/dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/White/pQTL/Tables/tab2/tab2_R2.txt")
 

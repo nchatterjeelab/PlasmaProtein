@@ -5,10 +5,10 @@
 
 rm(list=ls())
 
-ethnic <- "Black"
+ethnic <- "White"
 
 dir.create(paste0("/dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/",ethnic,"/pQTL/Tables/tab2/"))
-dir.create(paste0("/dcl01/chatterj/data/jzhang2/pwas/pipeline/codes/GRCh38/pQTL/Generate_reporting_tables/2_tab2/",ethnic))
+dir.create(paste0("/dcl01/chatterj/data/jzhang2/pwas/pipeline/codes/GRCh38/pQTL/1_Generate_tables/2_tab2/",ethnic))
 
 tab2  <- read_tsv(paste0("/dcl01/chatterj/data/jzhang2/pwas/pipeline/Results_GRCh38/",ethnic,"/pQTL/Tables/tab2.txt"))
 
@@ -50,8 +50,8 @@ qsub R2_", i,".sh
 
 
     print(i)
-    writeLines(b,  paste0("/dcl01/chatterj/data/jzhang2/pwas/pipeline/codes/GRCh38/pQTL/Generate_reporting_tables/2_tab2/",ethnic, "/R2_", i,".sh"))
+    writeLines(b,  paste0("/dcl01/chatterj/data/jzhang2/pwas/pipeline/codes/GRCh38/pQTL/1_Generate_tables/2_tab2/",ethnic, "/R2_", i,".sh"))
 
 }
-writeLines(a,  paste0("/dcl01/chatterj/data/jzhang2/pwas/pipeline/codes/GRCh38/pQTL/Generate_reporting_tables/2_tab2/",ethnic,"/all.sh"))
+writeLines(a,  paste0("/dcl01/chatterj/data/jzhang2/pwas/pipeline/codes/GRCh38/pQTL/1_Generate_tables/2_tab2/",ethnic,"/all.sh"))
 
