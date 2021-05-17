@@ -9,7 +9,7 @@ disease <- "Urate"
 ## data preparation
 
 annota <- read_tsv("/Users/jnz/Document/JHU/Research/PWAS/Analysis/4_PWAS_results/prot.anno_autosomal.txt")
-dat.pwas <- read_tsv(paste0("/Users/jnz/Document/JHU/Research/PWAS/Analysis/4_PWAS_results/", disease, "_EA/allchr.pwas"))
+dat.pwas <- read_tsv(paste0("/Users/jnz/Document/JHU/Research/PWAS/Analysis/4_PWAS_results/",disease,"_CI.txt"))
 p.pwas <- 0.05/nrow(dat.pwas)
 dat.pwas <- dat.pwas[!(is.na(dat.pwas$TWAS.P)),]
 pos_lookup <- read_tsv("/Users/jnz/Document/JHU/Research/PWAS/Analysis/4_PWAS_results/Plasma_Protein_hg19.pos")

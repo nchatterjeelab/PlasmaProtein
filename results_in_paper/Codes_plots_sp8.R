@@ -1,0 +1,13 @@
+library(readr)
+library(gaston)
+
+dat <- read_tsv(paste0("/Users/jnz/Document/JHU/Research/PWAS/Analysis/4_PWAS_results/null/cont_normal_allchr.out"))
+dat <- dat[!is.na(dat$PWAS.Z),]
+
+ggsave(filename=paste0("sp8.png"), 
+       plot=qqplot.pvalues(dat$PWAS.P, col.CB ="#E41A1C32", col.abline = "red", col= alpha("#4292c6", 0.4), pch=20, bty="n",
+                           main=paste0("QQ plot of PWAS p-values\nof null phenotype")), 
+       device="png",
+       path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/*Figures/sp/", 
+       width=5, height=5, units="in", dpi=500)
+
