@@ -1,1 +1,0 @@
-paste0("/dcl01/chatterj/data/diptavo/pQTL/coding_info/White/",)
