@@ -6,9 +6,9 @@ library(ggplot2)
 
 library(readxl)
 
-tmp <- read_excel("/Users/jnz/Dropbox/PWAS_manuscript/NatureGenetics/2021_06_revision2/Suppl_tables.xlsx", sheet = "ST2 -- PEER factors", skip=2)
+tmp <- read_excel("/Users/jnz/Dropbox/PWAS_manuscript/NatureGenetics/2021_11_revision4/Suppl_tables.xlsx", sheet = "ST2 -- PEER factors", skip=3)
 tmp <- tmp[1:21,]
-df.peer <- data.frame(NPEER=rep(tmp[[1]],2), NpGene=c(tmp[[2]], tmp[[3]]), Race=c(rep("AA", nrow(tmp)), rep("EA", nrow(tmp))))
+df.peer <- data.frame(NPEER=rep(tmp[[1]],2), NpGene=c(tmp[[2]], tmp[[3]]), Race=c(rep("EA", nrow(tmp)), rep("AA", nrow(tmp))))
 df.peer$NPEER <- as.integer(as.character(df.peer$NPEER))
 df.peer <- df.peer[df.peer$NPEER<140,]
 df.peer_highlight <- df.peer[as.character(c(10,30)),]
@@ -18,8 +18,8 @@ p1 <- ggplot(data = df.peer, aes(x = NPEER, y=NpGene, col=Race)) +
     geom_point(data=df.peer_highlight,aes(x = NPEER, y=NpGene, color=Race, fill=Race), size=5,shape=18) +
     theme(panel.background = element_blank()) +
     labs(y = "# significant SOMAmers ", x="No. of PEER factors", title= NULL) +
-    scale_colour_manual(values=c("#2171b5","#238b45")) + 
-    scale_fill_manual(values=c("#2171b5","#238b45"))
+    scale_colour_manual(values=c("#238b45","#2171b5")) + 
+    scale_fill_manual(values=c("#238b45","#2171b5"))
 
 ##### B
 library(ggVennDiagram)
@@ -41,7 +41,7 @@ p2 <-  ggplot(df.venn, aes(x0 = x, y0 = y, r = r, fill = labels)) +
     annotate("text", x = 0, y = 0, label = "1,447 overlapping")+
     annotate("text", x = 0.4, y =0.43, label = "2,004 in EA")+
     coord_fixed()+
-    scale_fill_manual(values=c("#2171b5","#238b45"))
+    scale_fill_manual(values=c("#238b45","#2171b5"))
     
 ## C
 
@@ -79,7 +79,7 @@ p3 <- ggplot(data = df.effmaf, aes(x = maf, y = abs(BETA), col=Race)) +
         panel.background = element_blank()) +
   facet_wrap(~Race,  ncol=2)+
   labs(x="MAF(1-MAF)", y = "Effect size", title = NULL)+
-  scale_colour_manual(values=c("#2171b5","#238b45"))
+  scale_colour_manual(values=c("#238b45","#2171b5"))
 
 
 ## D
@@ -96,7 +96,7 @@ p4 <- ggplot(data = df.efftss, aes(x = dist, y = abs(BETA), col=Race)) +
         panel.background = element_blank()) +
   facet_wrap(~Race,  ncol=2)+
   labs(x="Distance to TSS", y = "Effect size", title = NULL)+
-  scale_colour_manual(values=c("#2171b5","#238b45"))+
+  scale_colour_manual(values=c("#238b45","#2171b5"))+
   coord_cartesian(ylim = c(0.2,NA)) 
 
 
@@ -117,7 +117,7 @@ p5 <- ggplot(df.cond, aes(x = count)) +
   labs(x = "# conditionally significant cis-SNPs", 
        y = "# significant SOMAmers",title=NULL) + 
   facet_grid(cols = vars(Race))+
-  scale_fill_manual(values=c("#2171b5","#238b45"))
+  scale_fill_manual(values=c("#238b45","#2171b5"))
 
 
 

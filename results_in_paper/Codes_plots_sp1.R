@@ -16,7 +16,7 @@ cor(tmp,marginEA$BETA) # 0.9275709
 df.EA <- data.frame(Beta_AA=tmp,Beta_EA=marginEA$BETA,ID=marginEA$ID,stringsAsFactors = F)
 
 p.EA <- ggplot(data = df.EA, aes(x = Beta_EA, y = Beta_AA)) + 
-  geom_point(size=0.5, col="#238b45") +
+  geom_point(size=0.5, col="#2171b5") +
   geom_abline(intercept = 0, slope = 1, col="red") +
   theme(panel.background = element_blank(),
         axis.line = element_line(color="black", size = 0.2),
@@ -44,7 +44,7 @@ cor(tmp,marginAA$BETA) # 0.9561637
 df.AA <- data.frame(Beta_EA=tmp,Beta_AA=marginAA$BETA,ID=marginAA$ID,stringsAsFactors = F)
 
 p.AA <- ggplot(data = df.AA, aes(x = Beta_AA, y = Beta_EA)) + 
-  geom_point(size=0.5,col="#2171b5") +
+  geom_point(size=0.5,col="#238b45") +
   geom_abline(intercept = 0, slope = 1, col="red") +
   theme(panel.background = element_blank(),
         axis.line = element_line(color="black", size = 0.2)) +

@@ -117,10 +117,10 @@ p3 <- ggplot(data = df.CE, aes(x = model)) +
          y=expression(paste(R^2,"/cis-",h^2))) +
     coord_cartesian(ylim = c(0,1.2))  +
     theme(panel.background = element_blank(),
-          axis.text.x = element_text(color = c("#2171b5", "#238b45"),
+          axis.text.x = element_text(color = c("#238b45", "#2171b5"),
                                      vjust = 0.5, hjust = 0.5, angle = 15),
           legend.position="none") +
-    scale_fill_manual(values=c("#2171b5","#238b45"))
+    scale_fill_manual(values=c("#238b45","#2171b5"))
 
 
 #### D
@@ -184,7 +184,7 @@ p <- ggarrange(ggarrange(p1, p2,
                labels = c(NA,"d"))
 
 
-ggsave(filename="p2.png", 
+ggsave(filename="p3.png", 
        plot=p, device="png",
        path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/", 
        width=12, height=7.5, units="in", dpi=500)
