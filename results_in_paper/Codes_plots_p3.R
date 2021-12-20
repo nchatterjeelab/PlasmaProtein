@@ -2,6 +2,20 @@ library(ggplot2)
 library(stringr)
 library(readr)
 library(dplyr)
+
+
+My_Theme = theme(
+  panel.background = element_blank(), 
+  title = element_text(size = 8),
+  text = element_text(size = 7)
+  # axis.title.x = element_text(size = 10),
+  # axis.text.x = element_text(size = 8),
+  # axis.title.y = element_text(size = 10),
+  # axis.text.y = element_text(size = 8),
+  # legend.title = element_text(size = 10)
+  # legend.text = element_text(size = 8)
+)
+
 ## Fig 2
 
 summary.AA <- readRDS("/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*RData/h2_summary/summary.black.rds")
@@ -38,15 +52,15 @@ df.hsq <- data.frame(hsq = c(summary.AA$hsq.all, summary.EA$hsq.all,
                      stringsAsFactors = F)
 df.hsq$group <- factor(df.hsq$group, levels = c("T in Liver", "T in Whole Blood", "P in AA", "P in EA"))
 p1 <- ggplot(data = df.hsq, aes(x = group)) + 
-    geom_boxplot(alpha=0.6, notch = TRUE, notchwidth = 0.5, aes(y=hsq, fill=kind)) +
-    coord_cartesian(ylim = c(0,0.5)) +  
-    labs(y = expression(paste("cis-",h^2)), x=NULL, title=NULL) +
-    theme(legend.position="top",
-          legend.title=element_blank(), 
-          panel.background = element_blank(),
-          axis.text.x = element_text(color = c("#4a1486", "#4a1486", "#cb181d","#cb181d"),
-                                     vjust = 0.5, hjust = 0.5, angle = 15))+
-    scale_fill_manual(values=c("#4a1486","#cb181d"))
+  geom_boxplot(alpha=0.6, notch = TRUE, notchwidth = 0.5, aes(y=hsq, fill=kind)) +
+  coord_cartesian(ylim = c(0,0.5)) +  
+  labs(y = expression(paste("cis-",h^2)), x=NULL, title=NULL) +
+  theme(legend.position="top",
+        legend.title=element_blank(), 
+        axis.text.x = element_text(color = c("#4a1486", "#4a1486", "#cb181d","#cb181d"),
+                                   vjust = 0.5, hjust = 0.5, angle = 15))+
+  My_Theme+
+  scale_fill_manual(values=c("#4a1486","#cb181d"))
 
 
 
@@ -63,21 +77,21 @@ df.acc <- data.frame(acc = c(summary.AA$rsq.enet/summary.AA$hsq.all, summary.EA$
                              rep("P in AA", summary.AA$M), rep("P in EA", summary.EA$M),
                              rep("T in Liver", summary.Liver$M), rep("T in Whole Blood", summary.Whole_Blood$M)),
                      Model=c(rep("Elastic Net", summary.AA$M+summary.EA$M+summary.Liver$M+summary.Whole_Blood$M),
-                              rep("Best cis-SNP", summary.AA$M+summary.EA$M+summary.Liver$M+summary.Whole_Blood$M)), 
+                             rep("Best cis-SNP", summary.AA$M+summary.EA$M+summary.Liver$M+summary.Whole_Blood$M)), 
                      stringsAsFactors = F)
 df.acc$group <- factor(df.acc$group, levels = c("T in Liver", "T in Whole Blood", "P in AA", "P in EA"))
 df.acc$Model <- factor(df.acc$Model, levels=c("Best cis-SNP", "Elastic Net"))
 
 p2 <- ggplot(data = df.acc, aes(x = group)) +
-    geom_boxplot(alpha=0.8, notch = TRUE, notchwidth = 0.5, aes(y=acc, fill=Model)) + 
-    coord_cartesian(ylim = c(0,1.2)) +
-    labs(title = NULL, x=NULL,
-         y=expression(paste(R^2,"/cis-",h^2))) +
-    theme(legend.position="top",
-          panel.background = element_blank(),
-          axis.text.x = element_text(color = c("#4a1486", "#4a1486", "#cb181d","#cb181d"),
-                                     vjust = 0.5, hjust = 0.5, angle = 15))+
-    scale_fill_manual(values=c("#feb24c","#41b6c4"))
+  geom_boxplot(alpha=0.8, notch = TRUE, notchwidth = 0.5, aes(y=acc, fill=Model)) + 
+  coord_cartesian(ylim = c(0,1.2)) +
+  labs(title = NULL, x=NULL,
+       y=expression(paste(R^2,"/cis-",h^2))) +
+  theme(legend.position="top",
+        axis.text.x = element_text(color = c("#4a1486", "#4a1486", "#cb181d","#cb181d"),
+                                   vjust = 0.5, hjust = 0.5, angle = 15))+
+  My_Theme+
+  scale_fill_manual(values=c("#feb24c","#41b6c4"))
 
 
 acc.EA <- summary.EA$rsq.enet/summary.EA$hsq.all; acc.EA <- acc.EA[!is.na(acc.EA)]
@@ -111,16 +125,16 @@ df.CE <- cbind(rbind(df.EAtoAA, df.AAtoEA),
                race=c(rep("AA",nrow(df.EAtoAA)),rep("EA",nrow(df.AAtoEA))))
 
 p3 <- ggplot(data = df.CE, aes(x = model)) + 
-    geom_boxplot(alpha=0.8, notch = TRUE, notchwidth = 0.5, aes(y=acc, fill=model)) + 
-    facet_wrap(~race,  ncol=2)+
-    labs(title = NULL, x=NULL,
-         y=expression(paste(R^2,"/cis-",h^2))) +
-    coord_cartesian(ylim = c(0,1.2))  +
-    theme(panel.background = element_blank(),
-          axis.text.x = element_text(color = c("#238b45", "#2171b5"),
-                                     vjust = 0.5, hjust = 0.5, angle = 15),
-          legend.position="none") +
-    scale_fill_manual(values=c("#238b45","#2171b5"))
+  geom_boxplot(alpha=0.8, notch = TRUE, notchwidth = 0.5, aes(y=acc, fill=model)) + 
+  facet_wrap(~race,  ncol=2)+
+  labs(title = NULL, x=NULL,
+       y=expression(paste(R^2,"/cis-",h^2))) +
+  coord_cartesian(ylim = c(0,1.2))  +
+  theme(axis.text.x = element_text(color = c("#238b45", "#2171b5"),
+                                   vjust = 0.5, hjust = 0.5, angle = 15),
+        legend.position="none") +
+  My_Theme+
+  scale_fill_manual(values=c("#238b45","#2171b5"))
 
 
 #### D
@@ -161,16 +175,16 @@ names(myColors) <- gtex.colors$V1
 colScale <- scale_fill_manual(name = "gtex.colors", values = myColors)
 
 p4 <- ggplot(data = res, aes(x = tissue, fill=tissue)) +
-    geom_boxplot(alpha=0.8, notch = TRUE, notchwidth = 0.5, aes(y=cor)) + 
-    theme(panel.background = element_blank(),
-          axis.text.x = element_text(angle = 90, hjust = 1),
-          legend.position="none",
-    axis.title.y = element_text(hjust=1))+
-    coord_cartesian(ylim = c(-0.25,1))+
-    colScale +
-    labs(x = "GTEx V7 tissue", 
-         y = "Correlation between cis-regulated gene       \nexpression and plasma protein SOMAmers      ",
-         title=NULL)
+  geom_boxplot(alpha=0.8, notch = TRUE, notchwidth = 0.5, aes(y=cor)) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        legend.position="none",
+        axis.title.y = element_text(hjust=1))+
+  My_Theme+
+  coord_cartesian(ylim = c(-0.25,1))+
+  colScale +
+  labs(x = "GTEx V7 tissue", 
+       y = "Correlation between cis-regulated gene       \nexpression and plasma protein SOMAmers      ",
+       title=NULL)
 # ignore -- (Color represents for the proportion of genes whose expression levels and plasma protein levels are both significant cis-heritable. The lighter the color, the higher the proportion.)
 
 ### Put them together
@@ -184,9 +198,9 @@ p <- ggarrange(ggarrange(p1, p2,
                labels = c(NA,"d"))
 
 
-ggsave(filename="p3.png", 
-       plot=p, device="png",
-       path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/", 
-       width=12, height=7.5, units="in", dpi=500)
+ggsave(filename="p3.pdf",
+       plot=p, device="pdf",
+       path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/",
+       width=200, height=115, units="mm", dpi=320)
 
 
