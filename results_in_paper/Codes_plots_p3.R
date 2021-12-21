@@ -1,3 +1,6 @@
+
+### Fig 3
+
 library(ggplot2)
 library(stringr)
 library(readr)
@@ -16,7 +19,6 @@ My_Theme = theme(
   # legend.text = element_text(size = 8)
 )
 
-## Fig 2
 
 summary.AA <- readRDS("/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*RData/h2_summary/summary.black.rds")
 summary.EA <- readRDS("/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*RData/h2_summary/summary.white.rds")
@@ -35,6 +37,10 @@ mean(summary.AA$rsq.enet/summary.AA$hsq.all)
 mean(summary.EA$rsq.enet/summary.EA$hsq.all)
 
 col2 <- colorRampPalette(brewer.pal(8, "Set1"))(4)
+
+###############################################################
+###############################################################
+###############################################################
 
 #### A
 
@@ -63,6 +69,9 @@ p1 <- ggplot(data = df.hsq, aes(x = group)) +
   scale_fill_manual(values=c("#4a1486","#cb181d"))
 
 
+###############################################################
+###############################################################
+###############################################################
 
 ##### B
 
@@ -98,6 +107,11 @@ acc.EA <- summary.EA$rsq.enet/summary.EA$hsq.all; acc.EA <- acc.EA[!is.na(acc.EA
 acc.AA <- summary.AA$rsq.enet/summary.AA$hsq.all; acc.AA <- acc.AA[!is.na(acc.AA)]
 
 mood.test(acc.EA, acc.AA)
+
+
+###############################################################
+###############################################################
+###############################################################
 
 #### C
 
@@ -137,32 +151,17 @@ p3 <- ggplot(data = df.CE, aes(x = model)) +
   scale_fill_manual(values=c("#238b45","#2171b5"))
 
 
-#### D
+###############################################################
+###############################################################
+###############################################################
 
-# n_Gene <- readRDS("/Users/jnz/Document/JHU/Research/PWAS/Analysis/2_CompareTWASmodels/n_gene.rds")
-# all <- dir("/Users/jnz/Document/JHU/Research/PWAS/Analysis/2_CompareTWASmodels/")
-# all <- all[str_detect(all,"txt")]
-# for (i in 1:length(all)) {
-#     tmp <- read_tsv(paste0("/Users/jnz/Document/JHU/Research/PWAS/Analysis/2_CompareTWASmodels/", all[i]))
-#     if(i==1){
-#         res <- data.frame(cor=tmp$cor, tissue=all[i], 
-#                           geneinp=dim(tmp)[1]/n_Gene[gsub("[.].*", "", all[i])], 
-#                           stringsAsFactors = F)
-#     }else{
-#         res <- rbind(res,
-#                      data.frame(cor=tmp$cor, tissue=all[i], 
-#                                 geneinp=dim(tmp)[1]/n_Gene[gsub("[.].*", "", all[i])]), 
-#                      stringsAsFactors = F)
-#     }
-# }
-# res$tissue <- unlist(strsplit(res$tissue, ".txt"))
+#### D
 
 gtex.colors <- read.table("https://github.com/stephenslab/gtexresults/blob/master/data/GTExColors.txt?raw=TRUE", 
                           sep = '\t', comment.char = '', stringsAsFactors = F)
 
 res <- read_tsv("/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*RData/correlations_v7.txt")
 
-# a <- unlist(lapply(strsplit(unlist(strsplit(res$tissue, ".txt")), "_|-"), FUN = function(x){paste(x, collapse = "")}))
 a <- unlist(lapply(strsplit(res$tissue, "_|-"), FUN = function(x){paste(x, collapse = "")}))
 b <- unlist(lapply(strsplit(gtex.colors$V1, "-|\\(|\\)| "), FUN = function(x){paste(x, collapse = "")}))
 res$tissue <- gtex.colors$V1[match(a, b)]
@@ -185,7 +184,11 @@ p4 <- ggplot(data = res, aes(x = tissue, fill=tissue)) +
   labs(x = "GTEx V7 tissue", 
        y = "Correlation between cis-regulated gene       \nexpression and plasma protein SOMAmers      ",
        title=NULL)
-# ignore -- (Color represents for the proportion of genes whose expression levels and plasma protein levels are both significant cis-heritable. The lighter the color, the higher the proportion.)
+
+
+###############################################################
+###############################################################
+###############################################################
 
 ### Put them together
 library(ggpubr)
