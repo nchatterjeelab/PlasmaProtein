@@ -9,6 +9,7 @@
 
 library(readr)
 library(ggplot2)
+library(ggpubr)
 
 My_Theme = theme(
   panel.background = element_blank(), 
@@ -254,7 +255,7 @@ manhplot.twas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
                             direction="y",
                             min.segment.length = 0, force = 2,
                             box.padding = 0.5) +
-  ggrepel::geom_label_repel(data = labels_df.twas[3:4,],
+  ggrepel::geom_label_repel(data = labels_df.twas[3,],
                             aes(x = .data$BPcum,
                                 y = .data$logP,
                                 label = .data$label), col="black",
@@ -262,6 +263,17 @@ manhplot.twas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
                             point.padding = 0.3, 
                             nudge_y = -50,
                             ylim = c( -205,-50),
+                            xlim = c(labels_df.twas$BPcum[2], labels_df.twas$BPcum[3]+10^8),
+                            min.segment.length = 0, force = 2,
+                            box.padding = 0.5) +
+  ggrepel::geom_label_repel(data = labels_df.twas[4,],
+                            aes(x = .data$BPcum,
+                                y = .data$logP,
+                                label = .data$label), col="black",
+                            size = 2, segment.size = 0.2,
+                            point.padding = 0.3, 
+                            nudge_y = -50,
+                            ylim = c( -205,-75),
                             direction="y",
                             min.segment.length = 0, force = 2,
                             box.padding = 0.5) +
@@ -272,7 +284,7 @@ manhplot.twas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
                             size = 2, segment.size = 0.2,
                             point.padding = 0.3, 
                             ylim = c( -300,-20),
-                            xlim = c(labels_df.twas$BPcum[4]+10^8, labels_df.twas$BPcum[7]+0.3*10^8),
+                            xlim = c(labels_df.twas$BPcum[4], labels_df.twas$BPcum[7]+0.3*10^8),
                             min.segment.length = 0, force = 2,
                             box.padding = 0.8) +
   ggrepel::geom_label_repel(data = labels_df.twas[7:10,],
@@ -535,7 +547,7 @@ tmp <- ggplot(dat[!(dat$tissue %in% c("black","grey")), ], aes(x = BPcum, y = -l
   scale_color_manual(name = "GTEx tissues in TWAS", values = myColors)+
   theme_minimal() +
   theme(
-    legend.key.size = unit(3, "mm"),
+    legend.key.size = unit(2, "mm"),
     panel.border = element_blank(),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank()
@@ -543,20 +555,21 @@ tmp <- ggplot(dat[!(dat$tissue %in% c("black","grey")), ], aes(x = BPcum, y = -l
   My_Theme+
   guides(color=guide_legend(ncol = 1))
 
-p3 <- ggpubr::as_ggplot(get_legend(tmp))
+p3 <- as_ggplot(get_legend(tmp))
 
 
 ###############################################################
 ###############################################################
 ###############################################################
+
 
 p <- ggarrange(ggarrange(p1, p2,
                          nrow = 2, labels = c("a", "b"),
-                         heights = c(0.5,0.5)),
+                         heights = c(0.6,0.4)),
                p3,
                ncol = 2, 
                labels = c(NA, NA),
-               widths = c(0.78,0.22)
+               widths = c(0.75,0.25)
                )
 
 ggsave(filename=paste0("p4.pdf"), 
