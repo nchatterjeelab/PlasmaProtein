@@ -1,8 +1,24 @@
 
-# Urate
+###############################################################
+###############################################################
+###############################################################
+
+# Urate (panel a)
 
 library(readr)
 library(ggplot2)
+
+My_Theme = theme(
+  panel.background = element_blank(), 
+  title = element_text(size = 8),
+  text = element_text(size = 7)
+  # axis.title.x = element_text(size = 10),
+  # axis.text.x = element_text(size = 8),
+  # axis.title.y = element_text(size = 10),
+  # axis.text.y = element_text(size = 8),
+  # legend.title = element_text(size = 10)
+  # legend.text = element_text(size = 8)
+)
 
 disease <- "Urate"
 
@@ -134,10 +150,9 @@ manhplot.pwas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
                             point.padding = 0.3, 
                             ylim = c(6, 25),
                             min.segment.length = 0, force = 2,
-                            box.padding = 0.5)
+                            box.padding = 0.5)+
+  My_Theme
 
-
-# manhplot.pwas
 
 #####################
 ## TWAS
@@ -190,6 +205,7 @@ labels_df.twas <- labels_df.twas[order(labels_df.twas$BPcum),]
 
 dat <- rbind(dat[!m,],dat[m,])
 dat <- dat[dat$P>10^(-195),]
+
 manhplot.twas <- ggplot(dat, aes(x = BPcum, y = -log10(P), 
                                  color = as.factor(tissue), size = -log10(P))) +
   geom_point(aes(alpha = point_alpha), size=0.8) + 
@@ -267,16 +283,12 @@ manhplot.twas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
                             nudge_x = 1.2*10^8,
                             xlim = c(labels_df.twas$BPcum[7]-0.3*10^8, labels_df.twas$BPcum[10]+5*10^8),
                             min.segment.length = 0, force = 2,
-                            box.padding = 0.8) 
+                            box.padding = 0.8) +
+  My_Theme
 
-# manhplot.twas
 
-p <- cowplot::plot_grid(manhplot.pwas, manhplot.twas, ncol=1, align="v")
+p1 <- cowplot::plot_grid(manhplot.pwas, manhplot.twas, ncol=1, align="v")
 
-ggsave(filename=paste0("p4.1.png"), 
-       plot=p, device="png",
-       path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/", 
-       width=7, height=3.5, units="in", dpi=500)
 
 
 
@@ -284,7 +296,7 @@ ggsave(filename=paste0("p4.1.png"),
 ###############################################################
 ###############################################################
 
-# Gout
+# Gout (panel b)
 
 library(readr)
 library(ggplot2)
@@ -349,6 +361,7 @@ axis.set <- dat_all %>%
   group_by(CHR) %>% 
   summarize(center = (max(BPcum) + min(BPcum)) / 2)
 
+
 #####################
 ## PWAS
 
@@ -408,9 +421,9 @@ manhplot.pwas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
                             ylim = c(5, 28),
                             direction = "y", 
                             min.segment.length = 0, force = 2,
-                            box.padding = 0.5)
+                            box.padding = 0.5) +
+  My_Theme
 
-# manhplot.pwas
 
 #####################
 ## TWAS
@@ -501,16 +514,58 @@ manhplot.twas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
                             direction = "y",
                             ylim = c( -130, -20),
                             min.segment.length = 0, force = 2,
-                            box.padding = 0.5)
+                            box.padding = 0.5)+
+  My_Theme
 
-# manhplot.twas
 
-p <- cowplot::plot_grid(manhplot.pwas, manhplot.twas, ncol=1, align="v")
+p2 <- cowplot::plot_grid(manhplot.pwas, manhplot.twas, ncol=1, align="v")
 
-ggsave(filename=paste0("p4.2.png"), 
-       plot=p, device="png",
+
+###############################################################
+###############################################################
+###############################################################
+
+## TWAS tissue color legends
+
+tmp <- ggplot(dat[!(dat$tissue %in% c("black","grey")), ], aes(x = BPcum, y = -log10(P), 
+                                                             color = as.factor(tissue))) +
+  geom_point() + 
+  scale_color_manual(name = "GTEx tissues in TWAS", values = myColors)+
+  theme_minimal() +
+  theme(
+    legend.key.size = unit(3, "mm"),
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )+ 
+  My_Theme+
+  guides(color=guide_legend(ncol = 1))
+
+p3 <- ggpubr::as_ggplot(get_legend(tmp))
+
+
+###############################################################
+###############################################################
+###############################################################
+
+p <- ggarrange(ggarrange(p1, p2,
+                         nrow = 2, labels = c("a", "b"),
+                         heights = c(0.5,0.5)),
+               p3,
+               ncol = 2, 
+               labels = c(NA, NA),
+               widths = c(0.78,0.22)
+               )
+
+ggsave(filename=paste0("p4.pdf"), 
+       plot=p, device="pdf",
        path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/", 
-       width=7, height=3.5, units="in", dpi=500)
+       width=200, height=150, units="mm", dpi=320)
 
+
+# ggsave(filename=paste0("p4.png"), 
+#        plot=p, device="png",
+#        path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/", 
+#        width=200, height=150, units="mm", dpi=320)
 
 
