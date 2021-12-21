@@ -10,6 +10,8 @@
 library(readr)
 library(ggplot2)
 library(ggpubr)
+library(latex2exp)
+
 
 My_Theme = theme(
   panel.background = element_blank(), 
@@ -111,8 +113,8 @@ manhplot.pwas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
              linetype='dashed', col="black", size=0.3) +
   guides(color = F) + 
   labs(x = NULL, 
-       y = "PWAS\n-log10(p)", 
        title = disease) + 
+  ylab( TeX("$-log_{10}(p)$") )+
   theme_minimal() +
   theme(
     # legend.position = "top",
@@ -222,8 +224,8 @@ manhplot.twas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
              linetype='dashed', col="black", size=0.3) +
   guides(color = F, alpha = F) + 
   labs(x = NULL, 
-       y = "TWAS\n-log10(p)", 
        title = NULL) + 
+  ylab( TeX("$-log_{10}(p)$") )+
   theme_minimal() +
   theme(
     panel.border = element_blank(),
@@ -402,9 +404,9 @@ manhplot.pwas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
   geom_hline(yintercept = -log10(p.pwas),
              linetype='dashed', col="black", size=0.3) +
   guides(color = F) + 
-  labs(x = NULL, 
-       y = "PWAS\n-log10(p)", 
-       title = disease) + 
+  labs(x = NULL,
+       title = disease) +
+  ylab( TeX("$-log_{10}(p)$") )+
   theme_minimal() +
   theme(
     panel.border = element_blank(),
@@ -506,8 +508,8 @@ manhplot.twas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
              linetype='dashed', col="black", size=0.3) +
   guides(color = F, alpha = F) + 
   labs(x = NULL, 
-       y = "TWAS\n-log10(p)", 
        title = NULL) + 
+  ylab( TeX("$-log_{10}(p)$") )+
   theme_minimal() +
   theme(
     panel.border = element_blank(),
