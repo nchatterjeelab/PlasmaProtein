@@ -1,9 +1,28 @@
 
-##############################
-##############################
-# V7
+## Suppl Fig 5
 
 library(readr)
+library(ggplot2)
+library(ggpubr)
+
+My_Theme = theme(
+  panel.background = element_blank(), 
+  title = element_text(size = 8),
+  text = element_text(size = 7)
+  # axis.title.x = element_text(size = 10),
+  # axis.text.x = element_text(size = 8),
+  # axis.title.y = element_text(size = 10),
+  # axis.text.y = element_text(size = 8),
+  # legend.title = element_text(size = 10)
+  # legend.text = element_text(size = 8)
+)
+
+###############################################################
+###############################################################
+###############################################################
+
+# V7
+
 annota <- read_tsv("/Users/jnz/Document/JHU/Research/PWAS/Analysis/prot.anno_autosomal.txt")
 
 summary.AA <- readRDS("/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*RData/h2_summary/summary.black.rds")
@@ -42,21 +61,16 @@ df.hsqAALiver <- data.frame(hsq = c(summary.AA$hsq.all[summary.AA$gene %in% gene
 
 df.hsqAALiver$group <- factor(df.hsqAALiver$group, 
                               levels = c("T in Liver", "T in Whole_Blood", "P in AA", "P in EA"))
-p1 <- ggplot(data = df.hsqAALiver, aes(x = group)) + 
+p11 <- ggplot(data = df.hsqAALiver, aes(x = group)) + 
   geom_boxplot(alpha=0.6, notch = TRUE, notchwidth = 0.5, aes(y=hsq, fill=kind)) +
   coord_cartesian(ylim = c(0,0.5)) +  
   labs(y = expression(paste("cis-",h^2)), x=NULL, 
-       title=paste0(length(geneAALiver)," overlapping genes for\nexpression in liver (V7) and\nplasma protein in AA")) +
+       title=paste0(length(geneAALiver)," overlapping genes\nfor T in liver (V7)\nand P in AA")) +
   theme(legend.position="none",
         legend.title=element_blank(), 
-        panel.background = element_blank(),
         axis.text.x = element_text(color = c("#4a1486","#cb181d")))+
+  My_Theme +
   scale_fill_manual(values=c("#4a1486","#cb181d"))
-
-ggsave(filename="AA_Liver.png", 
-       plot=p1, device="png",
-       path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/sp/cish2_v7", 
-       width=3.1, height=5, units="in", dpi=500)
 
 
 ## AA Whole_Blood
@@ -70,22 +84,16 @@ df.hsqAAWhole_Blood <- data.frame(hsq = c(summary.AA$hsq.all[summary.AA$gene %in
 
 df.hsqAAWhole_Blood$group <- factor(df.hsqAAWhole_Blood$group, 
                                     levels = c("T in Liver", "T in Whole_Blood", "P in AA", "P in EA"))
-p1 <- ggplot(data = df.hsqAAWhole_Blood, aes(x = group)) + 
+p12 <- ggplot(data = df.hsqAAWhole_Blood, aes(x = group)) + 
   geom_boxplot(alpha=0.6, notch = TRUE, notchwidth = 0.5, aes(y=hsq, fill=kind)) +
   coord_cartesian(ylim = c(0,0.5)) +  
   labs(y = expression(paste("cis-",h^2)), x=NULL, 
-       title=paste0(length(geneAAWhole_Blood)," overlapping genes for\nexpression in whole blood (V7)\nand plasma protein in AA")) +
+       title=paste0(length(geneAAWhole_Blood)," overlapping genes\nfor T in whole blood (V7)\nand P in AA")) +
   theme(legend.position="none",
         legend.title=element_blank(), 
-        panel.background = element_blank(),
         axis.text.x = element_text(color = c("#4a1486","#cb181d")))+
+  My_Theme +
   scale_fill_manual(values=c("#4a1486","#cb181d"))
-
-ggsave(filename="AA_Whole_Blood.png", 
-       plot=p1, device="png",
-       path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/sp/cish2_v7", 
-       width=3.1, height=5, units="in", dpi=500)
-
 
 
 
@@ -100,21 +108,16 @@ df.hsqEALiver <- data.frame(hsq = c(summary.EA$hsq.all[summary.EA$gene %in% gene
 
 df.hsqEALiver$group <- factor(df.hsqEALiver$group, 
                               levels = c("T in Liver", "T in Whole_Blood", "P in AA", "P in EA"))
-p1 <- ggplot(data = df.hsqEALiver, aes(x = group)) + 
+p13 <- ggplot(data = df.hsqEALiver, aes(x = group)) + 
   geom_boxplot(alpha=0.6, notch = TRUE, notchwidth = 0.5, aes(y=hsq, fill=kind)) +
   coord_cartesian(ylim = c(0,0.5)) +  
   labs(y = expression(paste("cis-",h^2)), x=NULL, 
-       title=paste0(length(geneEALiver)," overlapping genes for\nexpression in liver (V7) and\nplasma protein in EA")) +
+       title=paste0(length(geneEALiver)," overlapping genes\nfor T in liver (V7)\nand P in EA")) +
   theme(legend.position="none",
         legend.title=element_blank(), 
-        panel.background = element_blank(),
         axis.text.x = element_text(color = c("#4a1486","#cb181d")))+
+  My_Theme +
   scale_fill_manual(values=c("#4a1486","#cb181d"))
-
-ggsave(filename="EA_Liver.png", 
-       plot=p1, device="png",
-       path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/sp/cish2_v7", 
-       width=3.1, height=5, units="in", dpi=500)
 
 
 ## EA Whole_Blood
@@ -128,29 +131,25 @@ df.hsqEAWhole_Blood <- data.frame(hsq = c(summary.EA$hsq.all[summary.EA$gene %in
 
 df.hsqEAWhole_Blood$group <- factor(df.hsqEAWhole_Blood$group, 
                                     levels = c("T in Liver", "T in Whole_Blood", "P in AA", "P in EA"))
-p1 <- ggplot(data = df.hsqEAWhole_Blood, aes(x = group)) + 
+p14 <- ggplot(data = df.hsqEAWhole_Blood, aes(x = group)) + 
   geom_boxplot(alpha=0.6, notch = TRUE, notchwidth = 0.5, aes(y=hsq, fill=kind)) +
   coord_cartesian(ylim = c(0,0.5)) +  
   labs(y = expression(paste("cis-",h^2)), x=NULL, 
-       title=paste0(length(geneEAWhole_Blood)," overlapping genes for\nexpression in whole blood (V7)\nand plasma protein in EA")) +
+       title=paste0(length(geneEAWhole_Blood)," overlapping genes\nfor T in whole blood (V7)\nand P in EA")) +
   theme(legend.position="none",
         legend.title=element_blank(), 
-        panel.background = element_blank(),
         axis.text.x = element_text(color = c("#4a1486","#cb181d")))+
+  My_Theme +
   scale_fill_manual(values=c("#4a1486","#cb181d"))
 
-ggsave(filename="EA_Whole_Blood.png", 
-       plot=p1, device="png",
-       path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/sp/cish2_v7", 
-       width=3.1, height=5, units="in", dpi=500)
 
 
+###############################################################
+###############################################################
+###############################################################
 
-##############################
-##############################
 # V8
 
-library(readr)
 annota <- read_tsv("/Users/jnz/Document/JHU/Research/PWAS/Analysis/prot.anno_autosomal.txt")
 
 summary.AA <- readRDS("/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*RData/h2_summary/summary.black.rds")
@@ -189,21 +188,16 @@ df.hsqAALiver <- data.frame(hsq = c(summary.AA$hsq.all[summary.AA$gene %in% gene
 
 df.hsqAALiver$group <- factor(df.hsqAALiver$group, 
                               levels = c("T in Liver", "T in Whole_Blood", "P in AA", "P in EA"))
-p1 <- ggplot(data = df.hsqAALiver, aes(x = group)) + 
+p21 <- ggplot(data = df.hsqAALiver, aes(x = group)) + 
   geom_boxplot(alpha=0.6, notch = TRUE, notchwidth = 0.5, aes(y=hsq, fill=kind)) +
   coord_cartesian(ylim = c(0,0.5)) +  
   labs(y = expression(paste("cis-",h^2)), x=NULL, 
-       title=paste0(length(geneAALiver)," overlapping genes for\nexpression in liver (V8) and\nplasma protein in AA")) +
+       title=paste0(length(geneAALiver)," overlapping genes\nfor T in liver (V8)\nand P in AA")) +
   theme(legend.position="none",
         legend.title=element_blank(), 
-        panel.background = element_blank(),
         axis.text.x = element_text(color = c("#4a1486","#cb181d")))+
+  My_Theme +
   scale_fill_manual(values=c("#4a1486","#cb181d"))
-
-ggsave(filename="AA_Liver.png", 
-       plot=p1, device="png",
-       path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/sp/cish2_v8/", 
-       width=3.1, height=5, units="in", dpi=500)
 
 
 ## AA Whole_Blood
@@ -217,22 +211,16 @@ df.hsqAAWhole_Blood <- data.frame(hsq = c(summary.AA$hsq.all[summary.AA$gene %in
 
 df.hsqAAWhole_Blood$group <- factor(df.hsqAAWhole_Blood$group, 
                                     levels = c("T in Liver", "T in Whole_Blood", "P in AA", "P in EA"))
-p1 <- ggplot(data = df.hsqAAWhole_Blood, aes(x = group)) + 
+p22 <- ggplot(data = df.hsqAAWhole_Blood, aes(x = group)) + 
   geom_boxplot(alpha=0.6, notch = TRUE, notchwidth = 0.5, aes(y=hsq, fill=kind)) +
   coord_cartesian(ylim = c(0,0.5)) +  
   labs(y = expression(paste("cis-",h^2)), x=NULL, 
-       title=paste0(length(geneAAWhole_Blood)," overlapping genes for\nexpression in whole blood (V8)\nand plasma protein in AA")) +
+       title=paste0(length(geneAAWhole_Blood)," overlapping genes\nfor T in whole blood (V8)\nand P in AA")) +
   theme(legend.position="none",
         legend.title=element_blank(), 
-        panel.background = element_blank(),
         axis.text.x = element_text(color = c("#4a1486","#cb181d")))+
+  My_Theme +
   scale_fill_manual(values=c("#4a1486","#cb181d"))
-
-ggsave(filename="AA_Whole_Blood.png", 
-       plot=p1, device="png",
-       path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/sp/cish2_v8/", 
-       width=3.1, height=5, units="in", dpi=500)
-
 
 
 
@@ -247,21 +235,16 @@ df.hsqEALiver <- data.frame(hsq = c(summary.EA$hsq.all[summary.EA$gene %in% gene
 
 df.hsqEALiver$group <- factor(df.hsqEALiver$group, 
                               levels = c("T in Liver", "T in Whole_Blood", "P in AA", "P in EA"))
-p1 <- ggplot(data = df.hsqEALiver, aes(x = group)) + 
+p23 <- ggplot(data = df.hsqEALiver, aes(x = group)) + 
   geom_boxplot(alpha=0.6, notch = TRUE, notchwidth = 0.5, aes(y=hsq, fill=kind)) +
   coord_cartesian(ylim = c(0,0.5)) +  
   labs(y = expression(paste("cis-",h^2)), x=NULL, 
-       title=paste0(length(geneEALiver)," overlapping genes for\nexpression in liver (V8) and\nplasma protein in EA")) +
+       title=paste0(length(geneEALiver)," overlapping genes\nfor T in liver (V8)\nand P in EA")) +
   theme(legend.position="none",
         legend.title=element_blank(), 
-        panel.background = element_blank(),
         axis.text.x = element_text(color = c("#4a1486","#cb181d")))+
+  My_Theme +
   scale_fill_manual(values=c("#4a1486","#cb181d"))
-
-ggsave(filename="EA_Liver.png", 
-       plot=p1, device="png",
-       path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/sp/cish2_v8/", 
-       width=3.1, height=5, units="in", dpi=500)
 
 
 ## EA Whole_Blood
@@ -275,19 +258,35 @@ df.hsqEAWhole_Blood <- data.frame(hsq = c(summary.EA$hsq.all[summary.EA$gene %in
 
 df.hsqEAWhole_Blood$group <- factor(df.hsqEAWhole_Blood$group, 
                                     levels = c("T in Liver", "T in Whole_Blood", "P in AA", "P in EA"))
-p1 <- ggplot(data = df.hsqEAWhole_Blood, aes(x = group)) + 
+p24 <- ggplot(data = df.hsqEAWhole_Blood, aes(x = group)) + 
   geom_boxplot(alpha=0.6, notch = TRUE, notchwidth = 0.5, aes(y=hsq, fill=kind)) +
   coord_cartesian(ylim = c(0,0.5)) +  
   labs(y = expression(paste("cis-",h^2)), x=NULL, 
-       title=paste0(length(geneEAWhole_Blood)," overlapping genes for\nexpression in whole blood (V8)\nand plasma protein in EA")) +
+       title=paste0(length(geneEAWhole_Blood)," overlapping genes\nfor T in whole blood (V8)\nand P in EA")) +
   theme(legend.position="none",
         legend.title=element_blank(), 
-        panel.background = element_blank(),
         axis.text.x = element_text(color = c("#4a1486","#cb181d")))+
+  My_Theme +
   scale_fill_manual(values=c("#4a1486","#cb181d"))
 
-ggsave(filename="EA_Whole_Blood.png", 
-       plot=p1, device="png",
-       path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/sp/cish2_v8/", 
-       width=3.1, height=5, units="in", dpi=500)
+###############################################################
+###############################################################
+###############################################################
+
+p <- ggarrange(ggarrange(p11, p12, p13, p14,
+                         nrow=1, labels = c("a", NA, NA, NA)
+                         ),
+               ggarrange(p21, p22, p23, p24,
+                         nrow=1, labels = c("a", NA, NA, NA)
+                         ),
+               nrow = 2, 
+               labels = c(NA, NA),
+               heights = c(0.5, 0.5)
+)
+
+ggsave(filename=paste0("sp5.pdf"), 
+       plot=p, device="pdf",
+       path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/sp/", 
+       width=200, height=150, units="mm", dpi=320)
+
 
