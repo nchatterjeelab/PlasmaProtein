@@ -5,8 +5,8 @@ library(ggplot2)
 
 My_Theme = theme(
   panel.background = element_blank(), 
-  title = element_text(size = 8),
-  text = element_text(size = 7)
+  title = element_text(size = 7),
+  text = element_text(size = 6)
   # axis.title.x = element_text(size = 10),
   # axis.text.x = element_text(size = 8),
   # axis.title.y = element_text(size = 10),
@@ -59,9 +59,9 @@ p2 <-  ggplot(df.venn, aes(x0 = x, y0 = y, r = r, fill = labels)) +
   theme_void() +
   theme(legend.position="none")+
   My_Theme+
-  annotate("text", x = -0.32, y =0.4, label = "1,618 in AA", size=3)+
-  annotate("text", x = 0, y = 0, label = "1,447 overlapping", size=3)+
-  annotate("text", x = 0.4, y =0.43, label = "2,004 in EA", size=3)+
+  annotate("text", x = -0.32, y =0.4, label = "1,618 in AA", size=2)+
+  annotate("text", x = 0, y = 0, label = "1,447 overlapping", size=2)+
+  annotate("text", x = 0.4, y =0.43, label = "2,004 in EA", size=2)+
   coord_fixed()+
   scale_fill_manual(values=c("#238b45","#2171b5"))
 
@@ -169,6 +169,6 @@ p <- ggarrange(ggarrange(p1, p2,
 ggsave(filename="p1.pdf", 
        plot=p, device="pdf",
        path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/", 
-       width=200, height=115, units="mm", dpi=320)
+       width=180, height=105, units="mm", dpi=320)
 
 

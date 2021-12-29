@@ -15,8 +15,8 @@ library(latex2exp)
 
 My_Theme = theme(
   panel.background = element_blank(), 
-  title = element_text(size = 8),
-  text = element_text(size = 7)
+  title = element_text(size = 7),
+  text = element_text(size = 6)
   # axis.title.x = element_text(size = 10),
   # axis.text.x = element_text(size = 8),
   # axis.title.y = element_text(size = 10),
@@ -144,10 +144,11 @@ manhplot.pwas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
                                 label = .data$label), col="black",
                             size = 2, segment.size = 0.2,
                             point.padding = 0.3, 
-                            nudge_x=0.2*10^8,
+                            direction = "y",
+                            ylim = c(20, 30),
                             min.segment.length = 0, force = 2,
-                            box.padding = 0.5) +
-  ggrepel::geom_label_repel(data = labels_df.pwas[c(5,6,8:10),],
+                            box.padding = 0.5)+
+    ggrepel::geom_label_repel(data = labels_df.pwas[c(5,6,8:10),],
                             aes(x = .data$BPcum,
                                 y = .data$logP,
                                 label = .data$label), col="black",
@@ -265,7 +266,7 @@ manhplot.twas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
                             point.padding = 0.3, 
                             nudge_y = -50,
                             ylim = c( -205,-50),
-                            xlim = c(labels_df.twas$BPcum[2], labels_df.twas$BPcum[3]+10^8),
+                            xlim = c(labels_df.twas$BPcum[1], labels_df.twas$BPcum[3]+0.5*10^8),
                             min.segment.length = 0, force = 2,
                             box.padding = 0.5) +
   ggrepel::geom_label_repel(data = labels_df.twas[4,],
@@ -275,7 +276,7 @@ manhplot.twas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
                             size = 2, segment.size = 0.2,
                             point.padding = 0.3, 
                             nudge_y = -50,
-                            ylim = c( -205,-75),
+                            ylim = c( -100,NA),
                             direction="y",
                             min.segment.length = 0, force = 2,
                             box.padding = 0.5) +
@@ -286,7 +287,7 @@ manhplot.twas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
                             size = 2, segment.size = 0.2,
                             point.padding = 0.3, 
                             ylim = c( -300,-20),
-                            xlim = c(labels_df.twas$BPcum[4], labels_df.twas$BPcum[7]+0.3*10^8),
+                            xlim = c(labels_df.twas$BPcum[4]+0.3*10^8, labels_df.twas$BPcum[7]+0.3*10^8),
                             min.segment.length = 0, force = 2,
                             box.padding = 0.8) +
   ggrepel::geom_label_repel(data = labels_df.twas[7:10,],
@@ -546,7 +547,7 @@ p2 <- cowplot::plot_grid(manhplot.pwas, manhplot.twas, ncol=1, align="v")
 tmp <- ggplot(dat[!(dat$tissue %in% c("black","grey")), ], aes(x = BPcum, y = -log10(P), 
                                                              color = as.factor(tissue))) +
   geom_point() + 
-  scale_color_manual(name = "GTEx tissues in TWAS", values = myColors)+
+  scale_color_manual(name = "GTEx V7 tissue in TWAS", values = myColors)+
   theme_minimal() +
   theme(
     legend.key.size = unit(2, "mm"),
@@ -571,13 +572,13 @@ p <- ggarrange(ggarrange(p1, p2,
                p3,
                ncol = 2, 
                labels = c(NA, NA),
-               widths = c(0.75,0.25)
+               widths = c(0.78,0.22)
                )
 
 ggsave(filename=paste0("p4.pdf"), 
        plot=p, device="pdf",
        path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/", 
-       width=200, height=150, units="mm", dpi=320)
+       width=180, height=135, units="mm", dpi=320)
 
 
 # ggsave(filename=paste0("p4.png"), 

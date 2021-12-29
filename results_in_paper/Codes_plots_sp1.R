@@ -6,8 +6,8 @@ library(ggplot2)
 
 My_Theme = theme(
   panel.background = element_blank(), 
-  title = element_text(size = 8),
-  text = element_text(size = 7)
+  title = element_text(size = 7),
+  text = element_text(size = 6)
   # axis.title.x = element_text(size = 10),
   # axis.text.x = element_text(size = 8),
   # axis.title.y = element_text(size = 10),
@@ -50,13 +50,15 @@ p.EA <- ggplot(data = df.EA, aes(x = Beta_EA, y = Beta_AA)) +
   geom_point(size=0.5, col="#2171b5") +
   geom_abline(intercept = 0, slope = 1, col="red") +
   theme(axis.line = element_line(color="black", size = 0.2)) +
-  My_Theme +
   ylim(-2,2)+xlim(-2,2)+
   mdthemes::md_theme_classic() +
   labs(x = "Effect size (EA)", 
        y = "Effect size (AA)",
        title="Common sentinel SNP of *cis*-pQTLs in EA") +
+  My_Theme +
   geom_point(data=df.EA_highlight, aes(x = Beta_EA, y = Beta_AA), size=0.5, col="darkorange")
+
+
        
 
 
@@ -93,13 +95,13 @@ p.AA <- ggplot(data = df.AA, aes(x = Beta_AA, y = Beta_EA)) +
   geom_point(size=0.5,col="#238b45") +
   geom_abline(intercept = 0, slope = 1, col="red") +
   theme(axis.line = element_line(color="black", size = 0.2)) +
-  My_Theme +
   ylim(-2,2)+xlim(-2,2)+
   mdthemes::md_theme_classic() +
   labs(x = "Effect size (AA)", 
        y = "Effect size (EA)",
        title="Common sentinel SNP of *cis*-pQTLs in AA"
        ) +
+  My_Theme +
   geom_point(data=df.AA_highlight, aes(x = Beta_AA, y = Beta_EA), size=0.5, col="darkorange")
 
 
@@ -113,7 +115,7 @@ p <- cowplot::plot_grid(p.EA, p.AA, ncol=2)
 ggsave(filename="sp1.pdf",
        plot=p, device="pdf",
        path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/sp/",
-       width=200, height=100, units="mm", dpi=320)
+       width=160, height=80, units="mm", dpi=320)
 
 
 

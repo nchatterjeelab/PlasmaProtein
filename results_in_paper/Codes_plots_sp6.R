@@ -3,8 +3,8 @@
 
 My_Theme = theme(
   panel.background = element_blank(), 
-  title = element_text(size = 8),
-  text = element_text(size = 7)
+  title = element_text(size = 7),
+  text = element_text(size = 6)
   # axis.title.x = element_text(size = 10),
   # axis.text.x = element_text(size = 8),
   # axis.title.y = element_text(size = 10),
@@ -56,5 +56,5 @@ p <- ggplot(data = res, aes(x = tissue, fill=tissue)) +
 ggsave(filename="sp6.pdf", 
        plot=p, device="pdf",
        path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/sp/", 
-       width=200, height=75, units="mm", dpi=320)
+       width=180, height=70, units="mm", dpi=320)
 
