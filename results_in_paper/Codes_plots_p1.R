@@ -1,9 +1,12 @@
+
+## Fig 1
+
 library(ggplot2)
 
 My_Theme = theme(
   panel.background = element_blank(), 
-  title = element_text(size = 8),
-  text = element_text(size = 7)
+  title = element_text(size = 7),
+  text = element_text(size = 6)
   # axis.title.x = element_text(size = 10),
   # axis.text.x = element_text(size = 8),
   # axis.title.y = element_text(size = 10),
@@ -12,7 +15,10 @@ My_Theme = theme(
   # legend.text = element_text(size = 8)
 )
 
-## Fig 1
+
+###############################################################
+###############################################################
+###############################################################
 
 #### A
 
@@ -33,6 +39,10 @@ p1 <- ggplot(data = df.peer, aes(x = NPEER, y=NpGene, col=Race)) +
   scale_colour_manual(values=c("#238b45","#2171b5")) + 
   scale_fill_manual(values=c("#238b45","#2171b5"))
 
+###############################################################
+###############################################################
+###############################################################
+
 ##### B
 library(ggVennDiagram)
 
@@ -49,11 +59,15 @@ p2 <-  ggplot(df.venn, aes(x0 = x, y0 = y, r = r, fill = labels)) +
   theme_void() +
   theme(legend.position="none")+
   My_Theme+
-  annotate("text", x = -0.32, y =0.4, label = "1,618 in AA", size=3)+
-  annotate("text", x = 0, y = 0, label = "1,447 overlapping", size=3)+
-  annotate("text", x = 0.4, y =0.43, label = "2,004 in EA", size=3)+
+  annotate("text", x = -0.32, y =0.4, label = "1,618 in AA", size=2)+
+  annotate("text", x = 0, y = 0, label = "1,447 overlapping", size=2)+
+  annotate("text", x = 0.4, y =0.43, label = "2,004 in EA", size=2)+
   coord_fixed()+
   scale_fill_manual(values=c("#238b45","#2171b5"))
+
+###############################################################
+###############################################################
+###############################################################
 
 ## C
 
@@ -93,6 +107,9 @@ p3 <- ggplot(data = df.effmaf, aes(x = maf, y = abs(BETA), col=Race)) +
   labs(x="MAF(1-MAF)", y = "Effect size", title = NULL)+
   scale_colour_manual(values=c("#238b45","#2171b5"))
 
+###############################################################
+###############################################################
+###############################################################
 
 ## D
 
@@ -110,6 +127,9 @@ p4 <- ggplot(data = df.efftss, aes(x = dist, y = abs(BETA), col=Race)) +
   scale_colour_manual(values=c("#238b45","#2171b5"))+
   coord_cartesian(ylim = c(0.2,NA)) 
 
+###############################################################
+###############################################################
+###############################################################
 
 ## E
 
@@ -131,6 +151,9 @@ p5 <- ggplot(df.cond, aes(x = count)) +
   scale_fill_manual(values=c("#238b45","#2171b5"))
 
 
+###############################################################
+###############################################################
+###############################################################
 
 ## Put them together
 
@@ -146,6 +169,6 @@ p <- ggarrange(ggarrange(p1, p2,
 ggsave(filename="p1.pdf", 
        plot=p, device="pdf",
        path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/", 
-       width=200, height=115, units="mm", dpi=320)
+       width=180, height=105, units="mm", dpi=320)
 
 

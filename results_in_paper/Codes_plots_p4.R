@@ -1,8 +1,29 @@
 
-# Urate
+## Fig 4
+
+###############################################################
+###############################################################
+###############################################################
+
+# Urate (panel a)
 
 library(readr)
 library(ggplot2)
+library(ggpubr)
+library(latex2exp)
+
+
+My_Theme = theme(
+  panel.background = element_blank(), 
+  title = element_text(size = 7),
+  text = element_text(size = 6)
+  # axis.title.x = element_text(size = 10),
+  # axis.text.x = element_text(size = 8),
+  # axis.title.y = element_text(size = 10),
+  # axis.text.y = element_text(size = 8),
+  # legend.title = element_text(size = 10)
+  # legend.text = element_text(size = 8)
+)
 
 disease <- "Urate"
 
@@ -92,8 +113,8 @@ manhplot.pwas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
              linetype='dashed', col="black", size=0.3) +
   guides(color = F) + 
   labs(x = NULL, 
-       y = "PWAS\n-log10(p)", 
        title = disease) + 
+  ylab( TeX("$-log_{10}(p)$") )+
   theme_minimal() +
   theme(
     # legend.position = "top",
@@ -123,10 +144,11 @@ manhplot.pwas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
                                 label = .data$label), col="black",
                             size = 2, segment.size = 0.2,
                             point.padding = 0.3, 
-                            nudge_x=0.2*10^8,
+                            direction = "y",
+                            ylim = c(20, 30),
                             min.segment.length = 0, force = 2,
-                            box.padding = 0.5) +
-  ggrepel::geom_label_repel(data = labels_df.pwas[c(5,6,8:10),],
+                            box.padding = 0.5)+
+    ggrepel::geom_label_repel(data = labels_df.pwas[c(5,6,8:10),],
                             aes(x = .data$BPcum,
                                 y = .data$logP,
                                 label = .data$label), col="black",
@@ -134,10 +156,9 @@ manhplot.pwas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
                             point.padding = 0.3, 
                             ylim = c(6, 25),
                             min.segment.length = 0, force = 2,
-                            box.padding = 0.5)
+                            box.padding = 0.5)+
+  My_Theme
 
-
-# manhplot.pwas
 
 #####################
 ## TWAS
@@ -190,6 +211,7 @@ labels_df.twas <- labels_df.twas[order(labels_df.twas$BPcum),]
 
 dat <- rbind(dat[!m,],dat[m,])
 dat <- dat[dat$P>10^(-195),]
+
 manhplot.twas <- ggplot(dat, aes(x = BPcum, y = -log10(P), 
                                  color = as.factor(tissue), size = -log10(P))) +
   geom_point(aes(alpha = point_alpha), size=0.8) + 
@@ -203,8 +225,8 @@ manhplot.twas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
              linetype='dashed', col="black", size=0.3) +
   guides(color = F, alpha = F) + 
   labs(x = NULL, 
-       y = "TWAS\n-log10(p)", 
        title = NULL) + 
+  ylab( TeX("$-log_{10}(p)$") )+
   theme_minimal() +
   theme(
     panel.border = element_blank(),
@@ -236,7 +258,7 @@ manhplot.twas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
                             direction="y",
                             min.segment.length = 0, force = 2,
                             box.padding = 0.5) +
-  ggrepel::geom_label_repel(data = labels_df.twas[3:4,],
+  ggrepel::geom_label_repel(data = labels_df.twas[3,],
                             aes(x = .data$BPcum,
                                 y = .data$logP,
                                 label = .data$label), col="black",
@@ -244,6 +266,17 @@ manhplot.twas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
                             point.padding = 0.3, 
                             nudge_y = -50,
                             ylim = c( -205,-50),
+                            xlim = c(labels_df.twas$BPcum[1], labels_df.twas$BPcum[3]+0.5*10^8),
+                            min.segment.length = 0, force = 2,
+                            box.padding = 0.5) +
+  ggrepel::geom_label_repel(data = labels_df.twas[4,],
+                            aes(x = .data$BPcum,
+                                y = .data$logP,
+                                label = .data$label), col="black",
+                            size = 2, segment.size = 0.2,
+                            point.padding = 0.3, 
+                            nudge_y = -50,
+                            ylim = c( -100,NA),
                             direction="y",
                             min.segment.length = 0, force = 2,
                             box.padding = 0.5) +
@@ -254,7 +287,7 @@ manhplot.twas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
                             size = 2, segment.size = 0.2,
                             point.padding = 0.3, 
                             ylim = c( -300,-20),
-                            xlim = c(labels_df.twas$BPcum[4]+10^8, labels_df.twas$BPcum[7]+0.3*10^8),
+                            xlim = c(labels_df.twas$BPcum[4]+0.3*10^8, labels_df.twas$BPcum[7]+0.3*10^8),
                             min.segment.length = 0, force = 2,
                             box.padding = 0.8) +
   ggrepel::geom_label_repel(data = labels_df.twas[7:10,],
@@ -267,16 +300,12 @@ manhplot.twas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
                             nudge_x = 1.2*10^8,
                             xlim = c(labels_df.twas$BPcum[7]-0.3*10^8, labels_df.twas$BPcum[10]+5*10^8),
                             min.segment.length = 0, force = 2,
-                            box.padding = 0.8) 
+                            box.padding = 0.8) +
+  My_Theme
 
-# manhplot.twas
 
-p <- cowplot::plot_grid(manhplot.pwas, manhplot.twas, ncol=1, align="v")
+p1 <- cowplot::plot_grid(manhplot.pwas, manhplot.twas, ncol=1, align="v")
 
-ggsave(filename=paste0("p4.1.png"), 
-       plot=p, device="png",
-       path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/", 
-       width=7, height=3.5, units="in", dpi=500)
 
 
 
@@ -284,7 +313,7 @@ ggsave(filename=paste0("p4.1.png"),
 ###############################################################
 ###############################################################
 
-# Gout
+# Gout (panel b)
 
 library(readr)
 library(ggplot2)
@@ -349,6 +378,7 @@ axis.set <- dat_all %>%
   group_by(CHR) %>% 
   summarize(center = (max(BPcum) + min(BPcum)) / 2)
 
+
 #####################
 ## PWAS
 
@@ -375,9 +405,9 @@ manhplot.pwas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
   geom_hline(yintercept = -log10(p.pwas),
              linetype='dashed', col="black", size=0.3) +
   guides(color = F) + 
-  labs(x = NULL, 
-       y = "PWAS\n-log10(p)", 
-       title = disease) + 
+  labs(x = NULL,
+       title = disease) +
+  ylab( TeX("$-log_{10}(p)$") )+
   theme_minimal() +
   theme(
     panel.border = element_blank(),
@@ -408,9 +438,9 @@ manhplot.pwas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
                             ylim = c(5, 28),
                             direction = "y", 
                             min.segment.length = 0, force = 2,
-                            box.padding = 0.5)
+                            box.padding = 0.5) +
+  My_Theme
 
-# manhplot.pwas
 
 #####################
 ## TWAS
@@ -479,8 +509,8 @@ manhplot.twas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
              linetype='dashed', col="black", size=0.3) +
   guides(color = F, alpha = F) + 
   labs(x = NULL, 
-       y = "TWAS\n-log10(p)", 
        title = NULL) + 
+  ylab( TeX("$-log_{10}(p)$") )+
   theme_minimal() +
   theme(
     panel.border = element_blank(),
@@ -501,16 +531,59 @@ manhplot.twas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
                             direction = "y",
                             ylim = c( -130, -20),
                             min.segment.length = 0, force = 2,
-                            box.padding = 0.5)
+                            box.padding = 0.5)+
+  My_Theme
 
-# manhplot.twas
 
-p <- cowplot::plot_grid(manhplot.pwas, manhplot.twas, ncol=1, align="v")
+p2 <- cowplot::plot_grid(manhplot.pwas, manhplot.twas, ncol=1, align="v")
 
-ggsave(filename=paste0("p4.2.png"), 
-       plot=p, device="png",
+
+###############################################################
+###############################################################
+###############################################################
+
+## TWAS tissue color legends
+
+tmp <- ggplot(dat[!(dat$tissue %in% c("black","grey")), ], aes(x = BPcum, y = -log10(P), 
+                                                             color = as.factor(tissue))) +
+  geom_point() + 
+  scale_color_manual(name = "GTEx V7 tissue in TWAS", values = myColors)+
+  theme_minimal() +
+  theme(
+    legend.key.size = unit(2, "mm"),
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )+ 
+  My_Theme+
+  guides(color=guide_legend(ncol = 1))
+
+p3 <- as_ggplot(get_legend(tmp))
+
+
+###############################################################
+###############################################################
+###############################################################
+
+
+p <- ggarrange(ggarrange(p1, p2,
+                         nrow = 2, labels = c("a", "b"),
+                         heights = c(0.6,0.4)),
+               p3,
+               ncol = 2, 
+               labels = c(NA, NA),
+               widths = c(0.78,0.22)
+               )
+
+ggsave(filename=paste0("p4.pdf"), 
+       plot=p, device="pdf",
        path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/", 
-       width=7, height=3.5, units="in", dpi=500)
+       width=180, height=135, units="mm", dpi=320)
 
+
+# ggsave(filename=paste0("p4.png"), 
+#        plot=p, device="png",
+#        path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/", 
+#        width=200, height=150, units="mm", dpi=320)
 
 

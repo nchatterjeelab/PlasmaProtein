@@ -1,9 +1,23 @@
 
-########################################################################
-########################################################################
+## Suppl Fig 6
+
+My_Theme = theme(
+  panel.background = element_blank(), 
+  title = element_text(size = 7),
+  text = element_text(size = 6)
+  # axis.title.x = element_text(size = 10),
+  # axis.text.x = element_text(size = 8),
+  # axis.title.y = element_text(size = 10),
+  # axis.text.y = element_text(size = 8),
+  # legend.title = element_text(size = 10)
+  # legend.text = element_text(size = 8)
+)
+
+###############################################################
+###############################################################
+###############################################################
+
 ## plot for direct measured proteins
-########################################################################
-########################################################################
 
 
 gtex.colors <- read.table("https://github.com/stephenslab/gtexresults/blob/master/data/GTExColors.txt?raw=TRUE", 
@@ -25,21 +39,22 @@ colScale <- scale_fill_manual(name = "gtex.colors", values = myColors)
 
 p <- ggplot(data = res, aes(x = tissue, fill=tissue)) +
   geom_boxplot(alpha=0.8, notch = TRUE, notchwidth = 0.5, aes(y=cor)) + 
-  theme(panel.background = element_blank(),
-        axis.text.x = element_text(angle = 90, hjust = 1),
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
         legend.position="none",
         axis.title.y = element_text(hjust=1))+
+  My_Theme +
   coord_cartesian(ylim = c(-0.15,0.45))+
   colScale +
   labs(x = "GTEx V7 tissue", 
        y = "Correlation between cis-regulated gene       \nexpression and plasma protein SOMAmers      ",
        title=NULL)
 
+###############################################################
+###############################################################
+###############################################################
 
-### Put them together
-
-ggsave(filename="sp6.png", 
-       plot=p, device="png",
+ggsave(filename="sp6.pdf", 
+       plot=p, device="pdf",
        path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/sp/", 
-       width=12, height=4.5, units="in", dpi=500)
+       width=180, height=70, units="mm", dpi=320)
 
