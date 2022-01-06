@@ -43,14 +43,14 @@ ss.aa.1 <- read_excel("Fig2.xlsx", sheet = "2f")
 
 
 sentinel.ea <- which(ss.ea$pos == 161106)
-mh1 <- ggplot(ss.ea[1:1000,],aes(x=pos,y=(p),color = as.character(ss.ea$cols[1:1000]))) + geom_point(alpha = 1,size = 1.2,color = as.character(ss.ea$cols[1:1000]),aes(color = ss.ea$cols[1:1000])) +
+mh1 <- ggplot(ss.ea[1:1000,],aes(x=pos,y=p)) + geom_point(alpha = 1,size = 1.2,aes(color = ss.ea$cols[1:1000])) +
   theme(panel.background = element_blank(),axis.line = element_line(size = 0.2),axis.text = element_text(size=6),axis.title = element_text(size = 6),legend.position = c(0.75, 0.75),legend.text = element_text(size = 6),legend.title = element_text(size = 7),
         legend.background = element_blank(),legend.key=element_blank()) +
   scale_x_continuous(name = "",breaks = c(ss.ea$pos[1],ss.ea$pos[sentinel.ea],ss.ea$pos[1000]),labels = as.character(round(c(ss.ea$pos[1],ss.ea$pos[sentinel.ea],ss.ea$pos[1000])/1000000,3))) +
   scale_y_continuous(name = expression("-log"[10]*"(p-value)"),limits = c(0,450),breaks = c(0,200,400)) + 
   annotate("point", x = ss.ea$pos[314], y = ss.ea$p[314], colour = "darkmagenta",size = 3.5,shape = 18) + 
-  scale_color_manual(name = expression("r"^2), labels = c("0 - 0.2","0.2 - 0.4","0.4 - 0.6","0.6 - 0.8","0.8 - 1"), values = c("lightgrey","deepskyblue2","darkolivegreen4","goldenrod2","firebrick2")) + 
-  annotate(x=ss.ea$pos[100], y=400, geom = "text",label="EA",col = "black",size = 2)
+  scale_color_manual(name = expression("r"^2), labels = c("0.4 - 0.6","0.2 - 0.4","0.8 - 1","0.6 - 0.8","0 - 0.2"), values = c("darkolivegreen4","deepskyblue2","firebrick2","goldenrod2","lightgrey" )) + 
+  annotate(x=ss.ea$pos[100], y=400, geom = "text",label="EA",col = "black",size = 6)
 
 mh1 <- mh1+ guides(color = guide_legend(ncol = 3))
 

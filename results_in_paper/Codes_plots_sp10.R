@@ -1,3 +1,5 @@
+library(GGally)
+
 pc2 <- read.table("ExtendedDataFig10.txt",heade = T)
 
 pc.pr <- ggpairs(pc2[,3:7],aes(color = pc2$V1),upper = list(continuous = "points"),diag = list(continuous = "blank")) + 
