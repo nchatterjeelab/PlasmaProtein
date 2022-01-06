@@ -130,7 +130,7 @@ p <- ggarrange(ggarrange(p1, p2,
                          widths = c(0.35,0.35,0.3)),
                nrow = 2, heights = c(0.4,0.6))
 
-ggsave(filename="Figure1", 
+ggsave(filename="Figure1.pdf", 
        plot=p, device="pdf",
        path="/Users/jnz/Dropbox/PWAS_manuscript/NatureGenetics/2021_12_revision4/Final_files_prepared_for_submission/Figures/", 
        width=180, height=105, units="mm", dpi=320)
