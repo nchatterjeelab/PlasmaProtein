@@ -20,10 +20,10 @@ My_Theme = theme(
 ## plot for direct measured proteins
 
 
+res <- read_tsv("ExtendedDataFig6.txt")
+
 gtex.colors <- read.table("https://github.com/stephenslab/gtexresults/blob/master/data/GTExColors.txt?raw=TRUE", 
                           sep = '\t', comment.char = '', stringsAsFactors = F)
-
-res <- read_tsv("/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*RData/correlations_direct_measured_prot_v7.txt")
 
 # a <- unlist(lapply(strsplit(unlist(strsplit(res$tissue, ".txt")), "_|-"), FUN = function(x){paste(x, collapse = "")}))
 a <- unlist(lapply(strsplit(res$tissue, "_|-"), FUN = function(x){paste(x, collapse = "")}))
@@ -53,8 +53,8 @@ p <- ggplot(data = res, aes(x = tissue, fill=tissue)) +
 ###############################################################
 ###############################################################
 
-ggsave(filename="sp6.pdf", 
+ggsave(filename="ExtendedDataFigure6.pdf", 
        plot=p, device="pdf",
-       path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/sp/", 
+       path="/Users/jnz/Dropbox/PWAS_manuscript/NatureGenetics/2021_12_revision4/Final_files_prepared_for_submission/Figures/", 
        width=180, height=70, units="mm", dpi=320)
 
