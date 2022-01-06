@@ -46,7 +46,7 @@ p <- ggplot(data = res, aes(x = tissue, fill=tissue)) +
   coord_cartesian(ylim = c(-0.15,0.45))+
   colScale +
   labs(x = "GTEx V7 tissue", 
-       y = "Correlation between cis-regulated gene       \nexpression and plasma protein SOMAmers      ",
+       y = "Correlation between cis-regulated gene        \n expression and measured plasma protein        ",
        title=NULL)
 
 ###############################################################
