@@ -1,4 +1,3 @@
-
 ## Fig 2
 
 library(ggplot2)
@@ -40,26 +39,28 @@ ss.aa.2 <- read_excel("Fig2.xlsx", sheet = "2e")
 ss.ea.1 <- read_excel("Fig2.xlsx", sheet = "2d")
 ss.aa.1 <- read_excel("Fig2.xlsx", sheet = "2f")
 
-
+ss.ea$cols <- factor(ss.ea$cols, levels = c("lightgrey","deepskyblue2","darkolivegreen4","goldenrod2","firebrick2"))
 
 sentinel.ea <- which(ss.ea$pos == 161106)
-mh1 <- ggplot(ss.ea[1:1000,],aes(x=pos,y=p)) + geom_point(alpha = 1,size = 1.2,aes(color = ss.ea$cols[1:1000])) +
+mh1 <- ggplot(ss.ea[1:1000,],aes(x=pos,y=p)) + 
+  geom_point(alpha = 1,size = 1.2, aes(color = cols)) +
   theme(panel.background = element_blank(),axis.line = element_line(size = 0.2),axis.text = element_text(size=6),axis.title = element_text(size = 6),legend.position = c(0.75, 0.75),legend.text = element_text(size = 6),legend.title = element_text(size = 7),
         legend.background = element_blank(),legend.key=element_blank()) +
   scale_x_continuous(name = "",breaks = c(ss.ea$pos[1],ss.ea$pos[sentinel.ea],ss.ea$pos[1000]),labels = as.character(round(c(ss.ea$pos[1],ss.ea$pos[sentinel.ea],ss.ea$pos[1000])/1000000,3))) +
   scale_y_continuous(name = expression("-log"[10]*"(p-value)"),limits = c(0,450),breaks = c(0,200,400)) + 
   annotate("point", x = ss.ea$pos[314], y = ss.ea$p[314], colour = "darkmagenta",size = 3.5,shape = 18) + 
-  scale_color_manual(name = expression("r"^2), labels = c("0.4 - 0.6","0.2 - 0.4","0.8 - 1","0.6 - 0.8","0 - 0.2"), values = c("darkolivegreen4","deepskyblue2","firebrick2","goldenrod2","lightgrey" )) + 
-  annotate(x=ss.ea$pos[100], y=400, geom = "text",label="EA",col = "black",size = 6)
+  scale_color_manual(name = expression("r"^2), 
+                     labels = c("0 - 0.2","0.2 - 0.4","0.4 - 0.6","0.6 - 0.8","0.8 - 1"),
+                     values = c("lightgrey","deepskyblue2","darkolivegreen4","goldenrod2","firebrick2")) + 
+  annotate(x=ss.ea$pos[100], y=400, geom = "text",label="EA",col = "black",size = 2)
 
-mh1 <- mh1+ guides(color = guide_legend(ncol = 3))
-
+mh1 <- mh1+ guides(color = guide_legend(ncol = 2))
 
 sentinel.aa <- which(ss.aa.2$pos == 161106)
 mh2 <- ggplot(ss.aa.2[1:1000,],aes(x=pos,y=-log10(p))) + geom_point(alpha = 1,color = ss.aa.2$cols[1:1000],size = 1.2) +
   theme(panel.background = element_blank(),axis.line = element_line(size = 0.2),axis.text = element_text(size=6),axis.title = element_text(size = 6)) +
   scale_x_continuous(name = paste("Position on chromosome:",ss.ea[1,1],"(Mb)"), breaks = c(ss.aa.2$pos[1],ss.aa.2$pos[sentinel.aa],ss.aa.2$pos[1000]),labels = as.character(round(c(ss.ea$pos[1],ss.aa.2$pos[sentinel.aa],ss.ea$pos[1000])/1000000,3))) +
-  scale_y_continuous(name = expression("-log"[10]*"(p-value)"),limits = c(0,130),breaks = c(0,100),) + 
+  scale_y_continuous(name = expression("-log"[10]*"(p-value)"),limits = c(0,130),breaks = c(0,100)) + 
   annotate("point", x = ss.aa.2$pos[262], y = -log10(ss.aa.2$p[262]), colour = "darkmagenta",size = 3.5,shape = 18) + 
   annotate(x=ss.aa.1$pos[100], y=100, geom = "text",label="AA",col = "black",size = 2)
 
@@ -97,5 +98,3 @@ ggsave(filename="Figure2.pdf",
        plot=p, device="pdf",
        path="/Users/jnz/Dropbox/PWAS_manuscript/NatureGenetics/2021_12_revision4/Final_files_prepared_for_submission/Figures/", 
        width=180, height=180, units="mm", dpi=320)
-
-
