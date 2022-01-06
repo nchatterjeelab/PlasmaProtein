@@ -4,10 +4,10 @@
 library(readr)
 library(gaston)
 
-dat <- read_tsv(paste0("/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*RData/PWAS/PWAS_null_cont_normal.txt"))
+dat <- read_tsv(paste0("ExtendedDataFig7.txt"))
 dat <- dat[!is.na(dat$PWAS.Z),]
 
-pdf("/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/sp/sp7.pdf", 
+pdf("/Users/jnz/Dropbox/PWAS_manuscript/NatureGenetics/2021_12_revision4/Final_files_prepared_for_submission/Figures/ExtendedDataFigure7.pdf", 
     width = 3.5, height = 3.5)
 qqplot.pvalues(dat$PWAS.P, col.CB ="#E41A1C32", col.abline = "red", col= alpha("#4292c6", 0.4), 
                pch=20, bty="n",

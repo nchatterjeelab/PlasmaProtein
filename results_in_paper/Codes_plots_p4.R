@@ -1,17 +1,12 @@
 
 ## Fig 4
 
-###############################################################
-###############################################################
-###############################################################
-
-# Urate (panel a)
-
 library(readr)
 library(ggplot2)
 library(ggpubr)
 library(latex2exp)
 
+dat_all_disease <- read_tsv("Fig4.txt")
 
 My_Theme = theme(
   panel.background = element_blank(), 
@@ -25,63 +20,17 @@ My_Theme = theme(
   # legend.text = element_text(size = 8)
 )
 
+###############################################################
+###############################################################
+###############################################################
+
+# Urate (panel a)
+
 disease <- "Urate"
 
-#####################
-## data preparation
-
-dat.pwas <- read_tsv(paste0("/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*RData/PWAS/PWAS_",disease,"_CI_hg19.txt"))
-p.pwas <- 0.05/nrow(dat.pwas)
-dat.pwas <- dat.pwas[!(is.na(dat.pwas$PWAS.P)),]
-dat.pwas <- dat.pwas[!(is.na(dat.pwas$P0)),]
-# pos_lookup <- read_tsv("/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*RData/pos/Plasma_Protein_EA_hg19.pos")
-# pos_lookup <- unique(pos_lookup[,c(3,5,6)])
-# dat.pwas <- dat.pwas[dat.pwas$ID %in% pos_lookup$ID[!is.na(pos_lookup$P0)],]
-# m <- match(dat.pwas$ID,pos_lookup$ID)
-# dat.pwas$P0 <- pos_lookup$P0[m]
-# dat.pwas$P1 <- pos_lookup$P1[m]
-dat.pwas <- dat.pwas
-dat.pwas$PWAS.P[dat.pwas$ID=="INHBC"] = 10^(-30)
-dat.pwas$ID[dat.pwas$ID=="INHBC"] = "INHBC(7.95e-63)"
-
-dat.pwas <- dat.pwas[,c("ID","CHR","P0","PWAS.P")]
-colnames(dat.pwas) <- c("ID","CHR","BP","P")
-dat.pwas$tissue <- rep("Plasma",nrow(dat.pwas))
-
-dat.pwas <- dat.pwas[!(is.na(dat.pwas$P)),]
-p.pwas <- 0.05/nrow(dat.pwas)
-
-
-library(dplyr)
-tissue_list <- readLines("/Users/jnz/Document/JHU/Research/PWAS/Analysis/Pipeline/PWAS/GTEx_V7_tissue_list.txt")
-res <- tibble()
-for(tissue in tissue_list){
-  dat.twas <- read_tsv(paste0("/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*RData/TWAS/", disease, "_EA/", tissue, ".out"))
-  p.twas <- 0.05/nrow(dat.twas)
-  dat.twas <- dat.twas[!(is.na(dat.twas$TWAS.P)),]
-  dat.twas$tissue <- rep(tissue,nrow(dat.twas))
-  res <- rbind(res,dat.twas)
-}
-
-dat.twas <- res[,c("ID","CHR","P0","TWAS.P","tissue")]
-colnames(dat.twas) <- c("ID","CHR","BP","P","tissue")
-
-dat.twas <- dat.twas[!(is.na(dat.twas$P)),]
-p.twas <- 0.05/nrow(dat.twas)
-
-dat_all <- rbind(dat.pwas, dat.twas)
-
-
+dat_all <- dat_all_disease[dat_all_disease$disease==disease,]
 
 nCHR <- length(unique(dat_all$CHR))
-dat_all$BPcum <- NA
-s <- 0
-nbp <- c()
-for (i in unique(dat_all$CHR)){
-  nbp[i] <- max(dat_all[dat_all$CHR == i,]$BP)
-  dat_all$BPcum[dat_all$CHR == i] <- dat_all$BP[dat_all$CHR == i] + s
-  s <- s + nbp[i]
-}
 
 axis.set <- dat_all %>% 
   group_by(CHR) %>% 
@@ -91,6 +40,7 @@ axis.set <- dat_all %>%
 ## PWAS
 
 dat <- dat_all[dat_all$tissue=="Plasma",]
+p.pwas <- unique(dat$pthres)
 
 label <- c("INHBB","ITIH1","BTN3A3","INHBA","C11orf68","B3GAT3","INHBC(7.95e-63)","SNUPN","NEO1","FASN")
 
@@ -106,7 +56,6 @@ manhplot.pwas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
   scale_x_continuous(label = axis.set$CHR, breaks = axis.set$center,
                      limits = c(min(dat_all$BPcum),max(dat_all$BPcum))) +
   scale_y_continuous(expand = c(0,0), limits = c(0, 32 )) +
-  # scale_color_manual(name = "gtex.colors", values = myColors)+
   scale_color_manual(values = rep(c("#4292c6", "#08306b"), nCHR)) +
   scale_size_continuous(range = c(0.5,3)) +
   geom_hline(yintercept = -log10(p.pwas),
@@ -117,7 +66,6 @@ manhplot.pwas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
   ylab( TeX("$-log_{10}(p)$") )+
   theme_minimal() +
   theme(
-    # legend.position = "top",
     panel.border = element_blank(),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
@@ -163,8 +111,8 @@ manhplot.pwas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
 #####################
 ## TWAS
 
-
 dat <- dat_all[dat_all$tissue!="Plasma",]
+p.twas <- unique(dat$pthres)
 
 m <- rep(F,nrow(dat))
 pos <- labels_df.pwas$BPcum
@@ -315,74 +263,22 @@ p1 <- cowplot::plot_grid(manhplot.pwas, manhplot.twas, ncol=1, align="v")
 
 # Gout (panel b)
 
-library(readr)
-library(ggplot2)
 
 disease <- "Gout"
 
-#####################
-## data preparation
-
-dat.pwas <- read_tsv(paste0("/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*RData/PWAS/PWAS_",disease,"_CI_hg19.txt"))
-p.pwas <- 0.05/nrow(dat.pwas)
-dat.pwas <- dat.pwas[!(is.na(dat.pwas$PWAS.P)),]
-dat.pwas <- dat.pwas[!(is.na(dat.pwas$P0)),]
-# pos_lookup <- read_tsv("/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*RData/pos/Plasma_Protein_EA_hg19.pos")
-# pos_lookup <- unique(pos_lookup[,c(3,5,6)])
-# dat.pwas <- dat.pwas[dat.pwas$ID %in% pos_lookup$ID[!is.na(pos_lookup$P0)],]
-# m <- match(dat.pwas$ID,pos_lookup$ID)
-# dat.pwas$P0 <- pos_lookup$P0[m]
-# dat.pwas$P1 <- pos_lookup$P1[m]
-dat.pwas <- dat.pwas
-
-dat.pwas <- dat.pwas[,c("ID","CHR","P0","PWAS.P")]
-colnames(dat.pwas) <- c("ID","CHR","BP","P")
-dat.pwas$tissue <- rep("Plasma",nrow(dat.pwas))
-
-dat.pwas <- dat.pwas[!(is.na(dat.pwas$P)),]
-p.pwas <- 0.05/nrow(dat.pwas)
-
-
-library(dplyr)
-tissue_list <- readLines("/Users/jnz/Document/JHU/Research/PWAS/Analysis/Pipeline/PWAS/GTEx_V7_tissue_list.txt")
-res <- tibble()
-for(tissue in tissue_list){
-  dat.twas <- read_tsv(paste0("/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*RData/TWAS/", disease, "_EA/", tissue, ".out"))
-  p.twas <- 0.05/nrow(dat.twas)
-  dat.twas <- dat.twas[!(is.na(dat.twas$TWAS.P)),]
-  dat.twas$tissue <- rep(tissue,nrow(dat.twas))
-  res <- rbind(res,dat.twas)
-}
-
-dat.twas <- res[,c("ID","CHR","P0","TWAS.P","tissue")]
-colnames(dat.twas) <- c("ID","CHR","BP","P","tissue")
-
-dat.twas <- dat.twas[!(is.na(dat.twas$P)),]
-p.twas <- 0.05/nrow(dat.twas)
-
-dat_all <- rbind(dat.pwas, dat.twas)
-
-
+dat_all <- dat_all_disease[dat_all_disease$disease==disease,]
 
 nCHR <- length(unique(dat_all$CHR))
-dat_all$BPcum <- NA
-s <- 0
-nbp <- c()
-for (i in unique(dat_all$CHR)){
-  nbp[i] <- max(dat_all[dat_all$CHR == i,]$BP)
-  dat_all$BPcum[dat_all$CHR == i] <- dat_all$BP[dat_all$CHR == i] + s
-  s <- s + nbp[i]
-}
 
 axis.set <- dat_all %>% 
   group_by(CHR) %>% 
   summarize(center = (max(BPcum) + min(BPcum)) / 2)
 
-
 #####################
 ## PWAS
 
 dat <- dat_all[dat_all$tissue=="Plasma",]
+p.pwas <- unique(dat$pthres)
 
 label <- c("IL1RN","BTN3A3","INHBC")
 
@@ -399,9 +295,6 @@ manhplot.pwas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
   scale_y_continuous(expand = c(0,0), limits = c(0, 24)) +
   scale_color_manual(values = rep(c("#4292c6", "#08306b"), nCHR)) +
   scale_size_continuous(range = c(0.5,3)) +
-  # geom_segment(aes(x=min(dat_all$BPcum), xend=max(dat_all$BPcum),
-  #                  y=-log10(p.pwas), yend=-log10(p.pwas)),
-  #              linetype='dashed', col="blue", size=0.3) +
   geom_hline(yintercept = -log10(p.pwas),
              linetype='dashed', col="black", size=0.3) +
   guides(color = F) + 
@@ -447,6 +340,7 @@ manhplot.pwas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
 
 
 dat <- dat_all[dat_all$tissue!="Plasma",]
+p.twas <- unique(dat$pthres)
 ylim <- abs(floor(log10(min(dat$P)))) + 2 
 
 m <- rep(F,nrow(dat))
@@ -502,9 +396,6 @@ manhplot.twas <- ggplot(dat, aes(x = BPcum, y = -log10(P),
   scale_y_reverse()+
   scale_color_manual(name = "gtex.colors", values = myColors)+
   scale_size_continuous(range = c(0.5,3)) +
-  # geom_segment(aes(x=min(dat_all$BPcum), xend=max(dat_all$BPcum),
-  #                  y=-log10(p.twas), yend=-log10(p.twas)),
-  #              linetype='dashed', col="blue", size=0.3) +
   geom_hline(yintercept = -log10(p.twas), limits = c(min(dat_all$BPcum), max(dat_all$BPcum)),
              linetype='dashed', col="black", size=0.3) +
   guides(color = F, alpha = F) + 
@@ -575,15 +466,10 @@ p <- ggarrange(ggarrange(p1, p2,
                widths = c(0.78,0.22)
                )
 
-ggsave(filename=paste0("p4.pdf"), 
+ggsave(filename=paste0("Figure4.pdf"), 
        plot=p, device="pdf",
-       path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/", 
+       path="/Users/jnz/Dropbox/PWAS_manuscript/NatureGenetics/2021_12_revision4/Final_files_prepared_for_submission/Figures/", 
        width=180, height=135, units="mm", dpi=320)
 
-
-# ggsave(filename=paste0("p4.png"), 
-#        plot=p, device="png",
-#        path="/Users/jnz/Document/JHU/Research/PWAS/Analysis/500Kb/*Figures/", 
-#        width=200, height=150, units="mm", dpi=320)
 
 
